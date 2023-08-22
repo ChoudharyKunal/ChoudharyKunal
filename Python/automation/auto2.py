@@ -15,7 +15,6 @@ driver = webdriver.Chrome(service=service)
 
 application_path = os.path.dirname(sys.executable)
 website = "https://www.youtube.com/"
-NewTablink = Keys.chord(Keys.CONTROL, Keys.ENTER);
 
 driver.get(website)
 
@@ -42,8 +41,8 @@ for videos in ytVideoContainer:
         videoTitle.append(titlaValue)
         videoLink.append(vLink)
         videoViews.append(vViews)
-        driver.NewTabLink(vLink)
-        #ActionChains().key_down(Keys.CONTROL).click(vLink).key_up(Keys.CONTROL).perform()
+
+        ActionChains.key_down(Keys.LEFT_CONTROL).click(vLink).key_up(Keys.LEFT_CONTROL).build().perform()
         time.sleep(3)
 
 ytDict = {'title':videoTitle, 'Views': videoViews, "Video Link": videoLink}
