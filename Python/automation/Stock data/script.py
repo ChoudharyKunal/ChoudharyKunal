@@ -15,6 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from datetime import datetime
 
 path = './chromedriver.exe'
 service = Service(executable_path=path)
@@ -25,8 +26,12 @@ website = "https://finance.yahoo.com/"
 
 StockList = ["TCS.NS","M&M.NS"]
 stockCurrentPrice = []
-stockLossAmt = []
+stockChangeAmt = []
 stockLossPercent = []
+StockNameList = []
+
+now = datetime.now()
+month_date_year = now.strftime("%m%d%y")#mmddyyyy
 
 
 def btnClick():
@@ -46,12 +51,13 @@ def searchStock(stockname):
         btnClick()
         time.sleep(5)
         stockCurrentPriceValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
-        stockLossAmtValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
+        stockChangeAmtValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
         stockLossPercentvalue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
 
         stockCurrentPrice.append(stockCurrentPriceValue)
-        stockLossAmt.append(stockLossAmtValue)
+        stockChangeAmt.append(stockChangeAmtValue)
         stockLossPercent.append(stockLossPercentvalue)
+
 
 
 
@@ -68,13 +74,19 @@ for stockName in StockList:
         time.sleep(5)
         searchStock(stockName)
         print(stockName+": done")
+        StockNameList.append(stockName)
         time.sleep(7)
     except Exception as e :
         print("got execetion at looping for stock values"+e)
 
 
+stock_dict = {"stockname": StockNameList, "StockPrice": stockCurrentPrice,"stockChange": stockChangeAmt,"StockChangePerc": stockLossPercent}
 
-driver.close()
+df_headline = pd.DataFrame(stock_dict)
+fileName = f'StockReport-{month_date_year}.csv'
+finalPath = os.path.join(application_path,fileName)
+df_headline.to_csv(finalPath)
+driver.quit()
 
 #/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a[1]
 
