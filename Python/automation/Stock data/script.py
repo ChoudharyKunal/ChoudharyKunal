@@ -20,21 +20,42 @@ service = Service(executable_path=path)
 driver = webdriver.Chrome(service=service)
 
 application_path = os.path.dirname(sys.executable)
-website = "https://in.tradingview.com/"
+website = "https://finance.yahoo.com/"
+
+StockList = ["TCS.NS","M&M.NS"]
+def btnClick():
+    try:
+        searchBtn = driver.find_element(by="xpath",
+                                        value="/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/button[2]")
+        searchBtn.click()
+    except Exception as e:
+        print("got exeception error on btn click: "+e)
+
+
+def searchStock(stockname):
+    try:
+        searchField = driver.find_element(by="xpath",
+                                         value="/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
+
+   #     searchField1 = driver.find_element(by="xpath", value='//form[1]/input[1]')
+        searchField.send_keys(stockname)
+
+        btnClick()
+
+    except Exception as e:
+        print("got exeception error: on searchStock "+e)
+
 
 driver.get(website)
 
-driver.find_element(by="xpath", value='/html[1]/body[1]/div[3]/div[3]/div[2]/div[3]/button[1]').click()
-time.sleep(5)
-
-
-#signin = driver.find_element(by="xpath", value='//div[@class="menuBox-Kq3ruQo8"]/div/button[1]')
-
-WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='menuBox-Kq3ruQo8']/div/button[1"))).click()
-
-
-time.sleep(5)
-
+for stockName in StockList:
+    try:
+        searchStock(stockName)
+        time.sleep(5)
+        print(stockName+": done")
+        time.sleep(10)
+    except Exception as e :
+        print("got execetion at looping for stock values"+e)
 
 #search_btn.click()
 
