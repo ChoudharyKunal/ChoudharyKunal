@@ -44,7 +44,7 @@ def searchStock(stockname):
                                          value="/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
         searchField.send_keys(stockname)
         btnClick()
-        time.sleep(10)
+        time.sleep(5)
         stockCurrentPriceValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
         stockLossAmtValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
         stockLossPercentvalue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
@@ -68,7 +68,7 @@ for stockName in StockList:
         time.sleep(5)
         searchStock(stockName)
         print(stockName+": done")
-        time.sleep(10)
+        time.sleep(7)
     except Exception as e :
         print("got execetion at looping for stock values"+e)
 
