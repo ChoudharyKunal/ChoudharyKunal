@@ -5,30 +5,32 @@ from selenium.webdriver.chrome.service import Service
 import pandas as pd
 import os
 import sys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-import robot
-import selenium.webdriver.support.expected_conditions
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime
 
 path = './chromedriver.exe'
 service = Service(executable_path=path)
 driver = webdriver.Chrome(service=service)
-
 application_path = os.path.dirname(sys.executable)
 website = "https://finance.yahoo.com/"
 
-StockList = ["TCS.NS","M&M.NS"]
+StockList = [
+    "Mahindra & Mahindra Limited",
+    "BHEL.NS",
+    "Exide Industries Limited",
+    "Godrej Industries Limited",
+    "Hindustan Aeronautics Limited",
+    "ITC Limited",
+    "Larsen & Toubro Limited",
+    "Steel Authority of India Limited",
+    "The Tata Power Company Limited"
+]
+
 stockCurrentPrice = []
 stockChangeAmt = []
 stockLossPercent = []
 StockNameList = []
+
 
 now = datetime.now()
 month_date_year = now.strftime("%m%d%y")#mmddyyyy
@@ -50,6 +52,8 @@ def searchStock(stockname):
         searchField.send_keys(stockname)
         btnClick()
         time.sleep(5)
+        #stockCurrentPriceValue = driver.find_element(by="xpath", value = '//div[@class="D(ib) Mend(20px)"]/fin-streamer[1]').text
+
         stockCurrentPriceValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
         stockChangeAmtValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
         stockLossPercentvalue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
