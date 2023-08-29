@@ -38,33 +38,36 @@ month_date_year = now.strftime("%m%d%y")#mmddyyyy
 
 def btnClick():
     try:
-        searchBtn = driver.find_element(by="xpath",
-                                        value="/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/button[2]")
+        searchBtn = driver.find_element(by = "xpath",
+                                        value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/button[2]")
         searchBtn.send_keys(Keys.ENTER)
+
     except Exception as e:
+
         print("got exeception error on btn click: "+e)
 
 
 def searchStock(stockname):
     try:
         searchField = driver.find_element(by="xpath",
-                                         value="/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
+                                         value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
         searchField.send_keys(stockname)
         btnClick()
         time.sleep(5)
         #stockCurrentPriceValue = driver.find_element(by="xpath", value = '//div[@class="D(ib) Mend(20px)"]/fin-streamer[1]').text
 
-        stockCurrentPriceValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
-        stockChangeAmtValue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
-        stockLossPercentvalue = driver.find_element(by="xpath", value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
+        stockCurrentPriceValue = driver.find_element(by="xpath",
+                                                     value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
+
+        stockChangeAmtValue = driver.find_element(by="xpath",
+                                                  value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
+
+        stockLossPercentvalue = driver.find_element(by="xpath",
+                                                    value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
 
         stockCurrentPrice.append(stockCurrentPriceValue)
         stockChangeAmt.append(stockChangeAmtValue)
         stockLossPercent.append(stockLossPercentvalue)
-
-
-
-
 
     except Exception as e:
         print("got exeception error: on searchStock "+e)
