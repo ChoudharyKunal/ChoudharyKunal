@@ -6,7 +6,10 @@ import pandas as pd
 import os
 import sys
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 from datetime import datetime
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 path = './chromedriver.exe'
 service = Service(executable_path=path)
@@ -30,6 +33,8 @@ stockCurrentPrice = []
 stockChangeAmt = []
 stockLossPercent = []
 StockNameList = []
+delay = 15
+waitTime = WebDriverWait(driver,10)
 
 
 now = datetime.now()
@@ -38,7 +43,7 @@ month_date_year = now.strftime("%m%d%y")#mmddyyyy
 
 def btnClick():
     try:
-        searchBtn = driver.find_element(by = "xpath",
+        searchBtn = driver.find_element(By.XPATH,
                                         value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/button[2]")
         searchBtn.send_keys(Keys.ENTER)
 
@@ -49,31 +54,42 @@ def btnClick():
 
 def searchStock(stockname):
     try:
-        searchField = driver.find_element(by="xpath",
+        searchField = driver.find_element(By.XPATH,
                                          value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
         searchField.send_keys(stockname)
         btnClick()
-
-        time.sleep(15)
-
-       # stockCurrentPriceValue = driver.find_element(by="xpath", value = "//div[@class='D(ib) Mend(20px)']/fin-streamer[@data-field='reregularMarketPrice']").text
+        try:
 
 
-        stockCurrentPriceValue = driver.find_element(by="xpath",
-                                                     value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]').text
 
-        stockChangeAmtValue = driver.find_element(by="xpath",
-                                                  value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]').text
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[@id ="quote-header-info"]')))
+           # stockCurrentPriceValue = driver.find_element(by="xpath", value = "//div[@class='D(ib) Mend(20px)']/fin-streamer[@data-field='reregularMarketPrice']").text
+            #stockCurrentPriceValue = WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH,'/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]')))
+            #stockCurrentPriceValue = waitTime.until(lambda driver: driver.find_element(by='xpath',value='/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]')).text
+            #newStockPriceVar = stockCurrentPriceValue.text()
+            #driver.implicitly_wait(15)
 
-        stockLossPercentvalue = driver.find_element(by="xpath",
-                                                    value = '/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]').text
+            stockCurrentPriceValue = driver.find_element(By.XPATH,
+                                                         value='//div[@id ="quote-header-info"]/div/div/div/fin-streamer[1]').text
 
-        stockCurrentPrice.append(stockCurrentPriceValue)
-        stockChangeAmt.append(stockChangeAmtValue)
-        stockLossPercent.append(stockLossPercentvalue)
+            stockChangeAmtValue = driver.find_element(By.XPATH,
+                                                      value='//div[@id ="quote-header-info"]/div/div/div/fin-streamer[2]').text
+
+            stockLossPercentvalue = driver.find_element(By.XPATH,
+                                                        value='//div[@id ="quote-header-info"]/div/div/div/fin-streamer[3]').text
+
+            driver.implicitly_wait(10)
+
+            stockCurrentPrice.append(stockCurrentPriceValue)
+            stockChangeAmt.append(stockChangeAmtValue)
+            stockLossPercent.append(stockLossPercentvalue)
+
+        except Exception as e:
+            print("exceptionm at find stock data"+str(e))
+
 
     except Exception as e:
-        print("got exeception error: on searchStock "+e)
+        print("got exeception error: on searchStock "+str(e))
 
 
 
