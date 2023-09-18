@@ -106,7 +106,7 @@ for stockName in StockList:
         print("got execetion at looping for stock values"+e)
 
 
-stock_dict = {"stockname": StockNameList, "StockPrice": stockCurrentPrice,"stockChange": stockChangeAmt,"StockChangePerc": stockLossPercent}
+stock_dict = {"stockname": stockName, "StockPrice": stockCurrentPrice,"stockChange": stockChangeAmt,"StockChangePerc": stockLossPercent}
 
 df_headline = pd.DataFrame(stock_dict)
 fileName = f'StockReport-{month_date_year}.csv'
