@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from datetime import datetime
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 path = './chromedriver.exe'
 service = Service(executable_path=path)
@@ -35,6 +36,7 @@ stockLossPercent = []
 StockNameList = []
 delay = 15
 waitTime = WebDriverWait(driver,10)
+action = ActionChains(driver)
 
 
 now = datetime.now()
@@ -44,9 +46,11 @@ month_date_year = now.strftime("%m%d%y")#mmddyyyy
 def btnClick():
     try:
         searchBtn = driver.find_element(By.XPATH,
-                                        value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/button[2]")
-        searchBtn.send_keys(Keys.ENTER)
+                                        value='//form[@class="Pos(r)"]/button[@type="submit"]')
 
+        searchBtn.send_keys(Keys.ENTER)
+        #driver.send_keys(Keys.ENTER)
+        driver.implicitly_wait(15)
     except Exception as e:
 
         print("got exeception error on btn click: "+e)
@@ -54,20 +58,21 @@ def btnClick():
 
 def searchStock(stockname):
     try:
-        searchField = driver.find_element(By.XPATH,
-                                         value = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/input[1]")
+        searchField = driver.find_element(By.XPATH,'//form[@class="Pos(r)"]/input[1]')
         searchField.send_keys(stockname)
-        btnClick()
+        print(stockname+" has been filled in value")
+        driver.find_element(By.XPATH,
+                            value='//form[@class="Pos(r)"]/button[@type="submit"]').click()
+        #btnClick()
+        print("button is clicked")
+        driver.implicitly_wait(15)
+
         try:
 
 
 
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[@id ="quote-header-info"]')))
-           # stockCurrentPriceValue = driver.find_element(by="xpath", value = "//div[@class='D(ib) Mend(20px)']/fin-streamer[@data-field='reregularMarketPrice']").text
-            #stockCurrentPriceValue = WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH,'/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]')))
-            #stockCurrentPriceValue = waitTime.until(lambda driver: driver.find_element(by='xpath',value='/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]')).text
-            #newStockPriceVar = stockCurrentPriceValue.text()
-            #driver.implicitly_wait(15)
+            WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//div[@id ="quote-header-info"]')))
+
 
             stockCurrentPriceValue = driver.find_element(By.XPATH,
                                                          value='//div[@id ="quote-header-info"]/div/div/div/fin-streamer[1]').text
@@ -79,13 +84,23 @@ def searchStock(stockname):
                                                         value='//div[@id ="quote-header-info"]/div/div/div/fin-streamer[3]').text
 
             driver.implicitly_wait(10)
+            StockNameList.append(stockName)
 
             stockCurrentPrice.append(stockCurrentPriceValue)
             stockChangeAmt.append(stockChangeAmtValue)
             stockLossPercent.append(stockLossPercentvalue)
 
+           # print(len(StockNameList)+':'+len(stockCurrentPriceValue)+':'+len(stockChangeAmtValue)+':'+len(stockLossPercent))
+
+
         except Exception as e:
             print("exceptionm at find stock data"+str(e))
+
+            StockNameList.append(stockName)
+
+            stockCurrentPrice.append("Null")
+            stockChangeAmt.append("Null")
+            stockLossPercent.append("Null")
 
 
     except Exception as e:
@@ -97,20 +112,21 @@ def searchStock(stockname):
 for stockName in StockList:
     try:
         driver.get(website)
-        time.sleep(5)
+        driver.implicitly_wait(15)
         searchStock(stockName)
         print(stockName+": done")
-        StockNameList.append(stockName)
         time.sleep(7)
     except Exception as e:
-        print("got execetion at looping for stock values"+e)
+        print("got execetion at looping for stock values"+str(e))
 
 
-stock_dict = {"stockname": stockName, "StockPrice": stockCurrentPrice,"stockChange": stockChangeAmt,"StockChangePerc": stockLossPercent}
 
+stock_dict = {"stockname": StockList, "StockPrice": stockCurrentPrice,"stockChange": stockChangeAmt,"StockChangePerc": stockLossPercent}
+
+cwd = os.getcwd()
 df_headline = pd.DataFrame(stock_dict)
 fileName = f'StockReport-{month_date_year}.csv'
-finalPath = os.path.join(application_path,fileName)
+finalPath = os.path.join(cwd,fileName)
 df_headline.to_csv(finalPath)
 driver.quit()
 
