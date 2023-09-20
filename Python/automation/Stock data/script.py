@@ -11,6 +11,7 @@ from datetime import datetime
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+import sendingEmailwithAttachment
 
 path = './chromedriver.exe'
 service = Service(executable_path=path)
@@ -37,11 +38,17 @@ StockNameList = []
 delay = 15
 waitTime = WebDriverWait(driver,10)
 action = ActionChains(driver)
+email_list = ["baisoyakunal69@gmail.com","choudharykunal474@gmail.com"]
 
 
 now = datetime.now()
 month_date_year = now.strftime("%m%d%y")#mmddyyyy
 
+def filename_create():
+    now = datetime.now()
+    month_date_year = now.strftime("%m%d%y")  # mmddyyyy
+    fileName = f'StockReport-{month_date_year}.csv'
+    return fileName
 
 def btnClick():
     try:
@@ -125,13 +132,12 @@ stock_dict = {"stockname": StockList, "StockPrice": stockCurrentPrice,"stockChan
 
 cwd = os.getcwd()
 df_headline = pd.DataFrame(stock_dict)
-fileName = f'StockReport-{month_date_year}.csv'
-finalPath = os.path.join(cwd,fileName)
+#fileName = f'StockReport-{month_date_year}.csv'
+finalPath = os.path.join(cwd,filename_create())
 df_headline.to_csv(finalPath)
 driver.quit()
 
-#/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a[1]
+print("starting to send mails")
+sendingEmailwithAttachment.send_emails(email_list,filename_create())
 
-# share price = /html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[1]
-#share change = /html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[2]
-# share percent change = /html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[3]/div[1]/div[1]/fin-streamer[3]
+print("done with sending mails")
