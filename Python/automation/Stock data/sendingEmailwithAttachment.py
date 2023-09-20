@@ -23,7 +23,7 @@ def send_emails(email_list,latest_filename):
         subject = f"Daily Stock Data Report for {latest_filename}"
         #body for email
         body = f"""
-        Hi Subscribe,
+        Hi Subscriber,
         
         Please find todays stock data report attached below as {latest_filename}. 
         
