@@ -97,7 +97,7 @@ def searchStock(stockname):
             stockChangeAmt.append(stockChangeAmtValue)
             stockLossPercent.append(stockLossPercentvalue)
 
-           # print(len(StockNameList)+':'+len(stockCurrentPriceValue)+':'+len(stockChangeAmtValue)+':'+len(stockLossPercent))
+
 
 
         except Exception as e:

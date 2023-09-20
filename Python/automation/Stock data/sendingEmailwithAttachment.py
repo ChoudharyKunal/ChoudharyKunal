@@ -23,10 +23,12 @@ def send_emails(email_list,latest_filename):
         subject = f"Daily Stock Data Report for {latest_filename}"
         #body for email
         body = f"""
-        Line1
-        Line2
-        Line3
-        etc
+        Hi Subscribe,
+        
+        Please find todays stock data report attached below as {latest_filename}. 
+        
+        Thanks and Regards
+        The Stock Reporter
         """
 
         #making a MIME objet to define parts of the email
