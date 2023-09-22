@@ -13,6 +13,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import sendingEmailwithAttachment
 
+start = time.time()
+
+print(23*2.3)
+
 path = './chromedriver.exe'
 service = Service(executable_path=path)
 driver = webdriver.Chrome(service=service)
@@ -141,3 +145,6 @@ print("starting to send mails")
 sendingEmailwithAttachment.send_emails(email_list,filename_create())
 
 print("done with sending mails")
+
+end = time.time()
+print(end - start)
